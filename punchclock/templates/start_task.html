@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Clock In</h1>
+    <form method='POST'>{% csrf_token %}
+        <label for='project'>Project:</label>
+        {{ form.project }}
+        <label for='activity'>Activity:</label>
+        {{ form.activity }}
+        <input type='submit' class='btn btn-primary' value='Clock In'/>
+    </form>
+{% endblock %}
