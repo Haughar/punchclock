@@ -1,12 +1,33 @@
 {% extends 'base.html' %}
 
+{% block extra_js %}
+    <script>
+        $('#project').change(function() {
+            var project;
+            project = $(this).val();
+            alert(project);
+            $.get('activities/', {chosen_project: project}, function(data){
+                $('#activities').html(data);
+                $('#activity_input').show();
+                $('#activities').show();
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
     <h1>Clock In</h1>
-    <form method='POST'>{% csrf_token %}
+    <form method='POST' id='startform'>{% csrf_token %}
         <label for='project'>Project:</label>
-        {{ form.project }}
-        <label for='activity'>Activity:</label>
-        {{ form.activity }}
+        <select name='project' class='form-control' form='startform' id='project'>
+            <option selected disabled hidden style='display: none' value=''></option>
+            {% for project in projects %}
+            <option value="{{ project.name }}">{{ project.name }}</option>
+            {% endfor %}
+        </select>
+        <label hidden for='activity' id='activity_input'>Activity:</label>
+        <select name='activities' class='form-control' form='startform' id='activities' style='display: none'>
+        </select>
         <input type='submit' class='btn btn-primary' value='Clock In'/>
     </form>
 {% endblock %}

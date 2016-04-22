@@ -28,7 +28,7 @@ class Task(models.Model):
     """ A collection of all the project/activities that a
         user worked on in a day.
     """
-    user = models.ForeignKey(User, related_name='uwnetid')
+    user = models.ForeignKey(User)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
     project = models.ForeignKey(Project)

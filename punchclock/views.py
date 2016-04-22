@@ -1,8 +1,11 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from punchclock.forms import TaskForm
+from punchclock.models import Project, Activity
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -19,15 +22,18 @@ def start_task(request):
 
     if request.method == 'GET':
         params['form'] = TaskForm()
+        params['projects'] = Project.objects.all()
         return render_to_response('start_task.html',
                                   params,
                                   context_instance=RequestContext(request))
     else: # request.method == 'POST'
         form = TaskForm(request.POST)
         if form.is_valid():
-            current_task = formsave(commit=False)
-            current_task.person = user
-            current_task.start_time = datetime.now()
+            current_task = form.save(commit=False)
+            current_task.user = user
+            current_task.start_time = datetime.datetime.now()
+            current_task.project = Project.objects.get(name=request.POST['project'])
+            current_task.activity = Activity.objects.get(name=request.POST['activities'])
             current_task.save()
             params['in_time'] = current_task.start_time
             params['project'] = current_task.project
@@ -35,3 +41,22 @@ def start_task(request):
             return render_to_response('end_task.html',
                                       params,
                                       context_instance=RequestContext(request))
+
+@login_required
+def get_activities(request):
+    chosen_project_name = request.GET['chosen_project']
+    chosen_project = Project.objects.get(name=chosen_project_name)
+    activities =  chosen_project.activities.all()
+    options = ""
+    for activity in activities:
+        new_option = "<option value='" + str(activity.name) + "'>" + str(activity.name) + "</option>\n"
+        options += new_option
+    return HttpResponse(options)
+
+@login_required
+def submit_form(request):
+    data = {
+        project: request.GET['project'],
+        activity: request.GET['activity'],
+    }
+    return 'hi'

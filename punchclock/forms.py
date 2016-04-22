@@ -6,4 +6,4 @@ class TaskForm(forms.ModelForm):
     """
     class Meta:
         model = Task
-        exclude = ('user', 'start_time', 'end_time')
+        exclude = ('user', 'start_time', 'end_time', 'project', 'activity')
