@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from punchclock.forms import TaskForm
-from punchclock.models import Project, Activity
+from punchclock.models import Project, Activity, Task
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
 import datetime
 
 
@@ -19,6 +20,14 @@ def start_task(request):
     # Grab information we want to pass along no matter what state we're in
     user = request.user
     params['user'] = user
+    import pdb; pdb.set_trace()
+
+
+    # if the user has a project they aer clocked into then send them to switch tasks
+    tasks = Task.objects.filter(user=user).filter(end_time=None)
+
+    if not tasks:
+        return redirect('/punchclock/switch/')
 
     if request.method == 'GET':
         params['form'] = TaskForm()
@@ -54,9 +63,8 @@ def get_activities(request):
     return HttpResponse(options)
 
 @login_required
-def submit_form(request):
-    data = {
-        project: request.GET['project'],
-        activity: request.GET['activity'],
-    }
-    return 'hi'
+def switch_task(request):
+    params = {'request': request}
+    return render_to_response('end_task.html',
+                              params,
+                              context_instance=RequestContext(request))
