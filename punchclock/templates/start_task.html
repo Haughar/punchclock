@@ -1,33 +1,11 @@
 {% extends 'base.html' %}
 
 {% block extra_js %}
-    <script>
-        $('#project').change(function() {
-            var project;
-            project = $(this).val();
-            alert(project);
-            $.get('activities/', {chosen_project: project}, function(data){
-                $('#activities').html(data);
-                $('#activity_input').show();
-                $('#activities').show();
-            });
-        });
-    </script>
+    {% include 'get_activities.html' %}
 {% endblock %}
 
 {% block content %}
     <h1>Clock In</h1>
-    <form method='POST' id='startform'>{% csrf_token %}
-        <label for='project'>Project:</label>
-        <select name='project' class='form-control' form='startform' id='project'>
-            <option selected disabled hidden style='display: none' value=''></option>
-            {% for project in projects %}
-            <option value="{{ project.name }}">{{ project.name }}</option>
-            {% endfor %}
-        </select>
-        <label hidden for='activity' id='activity_input'>Activity:</label>
-        <select name='activities' class='form-control' form='startform' id='activities' style='display: none'>
-        </select>
-        <input type='submit' class='btn btn-primary' value='Clock In'/>
-    </form>
+    <div class="clock"><iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:227px;height:75px;"src="http://www.clocklink.com/html5embed.php?clock=008&timezone=local&color=black&size=227&Title=&Message=&Target=&From=2016,1,1,0,0,0&Color=black"></iframe></div>
+    {% include 'proj_act_form.html' %}
 {% endblock %}

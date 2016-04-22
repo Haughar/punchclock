@@ -1,0 +1,11 @@
+<script>
+    $('#project').change(function() {
+        var project;
+        project = $(this).val();
+        $.get('/punchclock/activities/', {chosen_project: project}, function(data){
+            $('#activities').html(data);
+            $('#activity_input').show();
+            $('#activities').show();
+        });
+    });
+</script>

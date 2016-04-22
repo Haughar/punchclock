@@ -62,6 +62,16 @@ def get_activities(request):
 @login_required
 def switch_task(request):
     params = {'request': request}
+    user = request.user
+    params['user'] = user
+
+    tasks = Task.objects.filter(user=user).filter(end_time=None)
+    if not tasks:
+        return redirect('/punchclock/switch/')
+
+    if request.method == 'GET':
+        params['form'] = TaskForm()
+        params['projects'] = Project.objects.all()
     return render_to_response('end_task.html',
                               params,
                               context_instance=RequestContext(request))

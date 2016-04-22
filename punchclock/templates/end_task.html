@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
+{% block extra_js %}
+    {% include 'get_activities.html' %}
+{% endblock %}
+
 {% block content %}
     <h1>Got here</h1>
+    <div class="clock"><iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:227px;height:75px;"src="http://www.clocklink.com/html5embed.php?clock=008&timezone=local&color=black&size=227&Title=&Message=&Target=&From=2016,1,1,0,0,0&Color=black"></iframe></div>
+    {% include 'proj_act_form.html' %}
 
 {% endblock %}

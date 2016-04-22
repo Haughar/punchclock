@@ -1,0 +1,13 @@
+<form method='POST' id='startform'>{% csrf_token %}
+    <label for='project'>Project:</label>
+    <select name='project' class='form-control' form='startform' id='project'>
+        <option selected disabled hidden style='display: none' value=''></option>
+        {% for project in projects %}
+        <option value="{{ project.name }}">{{ project.name }}</option>
+        {% endfor %}
+    </select>
+    <label hidden for='activity' id='activity_input'>Activity:</label>
+    <select name='activities' class='form-control' form='startform' id='activities' style='display: none'>
+    </select>
+    <input type='submit' class='btn btn-primary' value='Clock In'/>
+</form>
