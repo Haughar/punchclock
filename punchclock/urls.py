@@ -4,5 +4,5 @@ urlpatterns = patterns('punchclock.views',
                        url(r'^$', 'start_task'),
                        url(r'^switch/$', 'switch_task'),
                        url(r'^activities/$', 'get_activities'),
-                       #url(r'^submit/$', 'submit_form'),
+                       url(r'^shift-details/$', 'shift_details'),
                        )

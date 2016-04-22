@@ -7,6 +7,7 @@ from punchclock.forms import TaskForm
 from punchclock.models import Project, Activity, Task
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from punchclock.utils import *
 import datetime
 
 
@@ -35,15 +36,12 @@ def start_task(request):
     else: # request.method == 'POST'
         form = TaskForm(request.POST)
         if form.is_valid():
-            current_task = form.save(commit=False)
-            current_task.user = user
-            current_task.start_time = datetime.datetime.now()
-            current_task.project = Project.objects.get(name=request.POST['project'])
-            current_task.activity = Activity.objects.get(name=request.POST['activities'])
-            current_task.save()
+            current_task = createNewTaskObject(request, form, user)
             params['in_time'] = current_task.start_time
             params['project'] = current_task.project
             params['activity'] = current_task.activity
+            params['form'] = TaskForm()
+            params['projects'] = Project.objects.all()
             return render_to_response('end_task.html',
                                       params,
                                       context_instance=RequestContext(request))
@@ -67,11 +65,41 @@ def switch_task(request):
 
     tasks = Task.objects.filter(user=user).filter(end_time=None)
     if not tasks:
-        return redirect('/punchclock/switch/')
+        return redirect('/punchclock/')
 
     if request.method == 'GET':
         params['form'] = TaskForm()
         params['projects'] = Project.objects.all()
-    return render_to_response('end_task.html',
+        return render_to_response('end_task.html',
+                                  params,
+                                  context_instance=RequestContext(request))
+    if request.method == 'POST':
+        # will get here if they are switching to another task
+        tasks[0].end_time = datetime.datetime.now()
+        tasks[0].save()
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            current_task = createNewTaskObject(request, form, user)
+            params['in_time'] = current_task.start_time
+            params['project'] = current_task.project
+            params['activity'] = current_task.activity
+            return render_to_response('end_task.html',
+                                      params,
+                                      context_instance=RequestContext(request))
+
+@login_required
+def shift_details(request):
+    params = {'request': request}
+    c = {}
+    c.update(csrf(request))
+    user = request.user
+    params['user'] = user
+    tasks = Task.objects.filter(user=user).filter(end_time=None)
+    if tasks:
+        tasks[0].end_time = datetime.datetime.now()
+        tasks[0].save()
+    params['tasks'] = Task.objects.filter(user=user)
+
+    return render_to_response('shift-details.html',
                               params,
                               context_instance=RequestContext(request))
