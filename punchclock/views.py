@@ -20,13 +20,10 @@ def start_task(request):
     # Grab information we want to pass along no matter what state we're in
     user = request.user
     params['user'] = user
-    import pdb; pdb.set_trace()
-
 
     # if the user has a project they aer clocked into then send them to switch tasks
     tasks = Task.objects.filter(user=user).filter(end_time=None)
-
-    if not tasks:
+    if tasks:
         return redirect('/punchclock/switch/')
 
     if request.method == 'GET':
