@@ -34,6 +34,5 @@ class Task(models.Model):
     project = models.ForeignKey(Project)
     activity = models.ForeignKey(Activity)
 
-
     def __unicode__(self):
         return "%s %s-%s" % (self.user, self.start_time, self.end_time)

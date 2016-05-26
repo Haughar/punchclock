@@ -3,4 +3,20 @@
 {% block content %}
     <h1>Here are the deets.</h1>
 
+    <table class="table">
+        <tr>
+            <th>Project/Activity</th>
+            <th>Time Worked</th>
+        </tr>
+    {% for key, value in combine_tasks.items %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <td>Total:</td>
+            <td>{{ total }}</td>
+        </tr>
+
 {% endblock %}

@@ -5,16 +5,23 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Got here</h1>
+    {% if current_project and current_activity %}
+        <div class="alert alert-success">
+            <p>You are now working on {{ current_activity }} within {{ current_project }}.</p>
+        </div>
+    {% endif %}
+
     <div class="clock"><iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:227px;height:75px;"src="http://www.clocklink.com/html5embed.php?clock=008&timezone=local&color=black&size=227&Title=&Message=&Target=&From=2016,1,1,0,0,0&Color=black"></iframe></div>
-    <div class="switch-form">
-        {% include 'proj_act_form.html' %}
-    </div>
-    <div class="end-form">
-        <p class="end-shift-notice">By clicking the "End Shift" button below, you will end your shift and the work you were doing on {proj/act}.</p>
-        <form method='POST' id='endform' action="/punchclock/shift-details/">{% csrf_token %}
-            <input type='submit' class='btn btn-primary' value='End Shift'/>
-        </form>
+    <div class="row">
+        <div class="switch-form col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            {% include 'proj_act_form.html' %}
+        </div>
+        <div class="end-form col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <p class="end-shift-notice">By clicking the "End Shift" button below, you will end your shift and the work you were doing on the current project and activity.</p>
+            <form method='POST' id='endform' action="/punchclock/shift-details/">{% csrf_token %}
+                <input type='submit' class='btn btn-primary' value='End Shift'/>
+            </form>
+        </div>
     </div>
 
 {% endblock %}
