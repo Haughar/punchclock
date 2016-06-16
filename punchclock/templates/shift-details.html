@@ -11,7 +11,7 @@
     {% for key, value in combine_tasks.items %}
         <tr>
             <td>{{ key }}</td>
-            <td>{{ value }}</td>
+            <td>{{ value.hours }} hours, {{ value.minutes }} minutes, {{ value.seconds }} seconds</td>
         </tr>
     {% endfor %}
         <tr>
